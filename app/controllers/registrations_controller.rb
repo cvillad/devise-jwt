@@ -7,6 +7,8 @@ class RegistrationsController < Devise::RegistrationsController
     render json: serializer.new(@user), status: :created
   end
 
+  private
+
   def serializer 
     UserSerializer
   end
