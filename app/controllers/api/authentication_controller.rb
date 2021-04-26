@@ -4,7 +4,7 @@ class Api::AuthenticationController < ApiController
   def create
     user = User.find_by!(email: login_params[:email])
     if user&.valid_password?(login_params[:password])
-      render json: { data: {token: JsonWebToken.encode(sub: user.id)} }
+      render json: { data: {token: JsonWebToken.encode(id: user.id)} }
     else
       render json: { errors: [{
         source: { pointer: "/data/attributes/password" }, 

@@ -281,6 +281,7 @@ Devise.setup do |config|
     # manager.intercept_401 = false
     manager.strategies.add :jwt, Devise::Strategies::JWT
     manager.default_strategies(scope: :user).unshift :jwt
+    manager.failure_app = CustomFailureApp
   end
 
   # ==> Mountable engine configurations
@@ -310,6 +311,25 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 end
+class CustomFailureApp < Devise::FailureApp
+  def respond
+    if request.format == :json
+      json_error_response
+    else
+      super
+    end
+  end
+
+  def json_error_response
+    self.status = 401
+    self.content_type = "application/json"
+    
+    self.response_body = { errors: {title: 'Unauthorized',
+      status: 401,
+      detail: i18n_message,
+      source: { pointer: '/request/headers/authorization' }} }.to_json
+  end
+end
 
 module Devise
   module Strategies
@@ -321,7 +341,7 @@ module Devise
       def authenticate!
         token = request.headers.fetch('Authorization', '').split(' ').last
         payload = JsonWebToken.decode(token)
-        success! User.find(payload['sub'])
+        success! User.find(payload['id'])
       rescue ::JWT::ExpiredSignature
         fail! 'Auth token has expired'
       rescue ::JWT::DecodeError
