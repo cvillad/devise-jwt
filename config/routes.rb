@@ -6,6 +6,6 @@ Rails.application.routes.draw do
   namespace :api do
     post :auth, to: 'authentication#create'
     get  '/auth' => 'authentication#fetch'
-    resources :notes, except: [:new, :edit]
+    resources :notes, except: [:new, :edit], param: :slug
   end
 end

@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :note do
-    title { "sample-title" }
+    sequence(:title) { |n| "sample-title-#{n}" }
     body { "sample-body" }
+    sequence(:slug) { |n| "sample-note-#{n}" }
     
     association :user
   end
