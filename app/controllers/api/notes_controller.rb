@@ -5,6 +5,9 @@ class Api::NotesController < ApiController
   end
 
   def create 
+    note = current_user.notes.build(note_params)
+    note.save!
+    render json: serializer.new(note)
   end
 
   def update 
@@ -17,5 +20,9 @@ class Api::NotesController < ApiController
   
   def serializer 
     NoteSerializer
+  end
+
+  def note_params
+    params.dig(:data, :attributes)&.permit(:title, :body)
   end
 end

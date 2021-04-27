@@ -5,9 +5,7 @@ RSpec.describe RegistrationsController, type: :request do
     subject { post "/signup", params: params} 
     
     context "when invalid data provided" do 
-      let(:params) do 
-        {user: {email: nil, password: nil} }
-      end
+      let(:params) {}
 
       it "should return unprocessable entity status code" do 
         subject
@@ -38,7 +36,14 @@ RSpec.describe RegistrationsController, type: :request do
 
     context "when valid data provided" do 
       let(:params) do 
-        {user: {email: "jdoe@gmail.com", password: "secret"} }
+        {
+          data: {
+            attributes: {
+              email: "jdoe@gmail.com", 
+              password: "secret"
+            } 
+          }
+        }
       end
 
       it "should return created status code" do 

@@ -22,6 +22,6 @@ class Api::AuthenticationController < ApiController
   private 
 
   def login_params
-    params.require(:user).permit(:email, :password)
+    params.dig(:data, :attributes)&.permit(:email, :password).to_h
   end
 end

@@ -12,4 +12,8 @@ class RegistrationsController < Devise::RegistrationsController
   def serializer 
     UserSerializer
   end
+
+  def sign_up_params
+    params.dig(:data, :attributes)&.permit(:email, :password)
+  end
 end
